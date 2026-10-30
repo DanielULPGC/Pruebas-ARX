@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Simulador Maqueta 3D · XR Blocks v3.12 · Las Manos que Construyeron la Historia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./lib/estilos.css?v=3.12">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./lib/three.module.js"
+    }
+  }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body, html { margin: 0; height: 100%; overflow: hidden; background: #141210; color: #faf7f2; }
+    #lienzo-sim { position: fixed; inset: 0; width: 100%; height: 100%; cursor: grab; }
+    #lienzo-sim:active { cursor: grabbing; }
+    .panel-epocas {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      width: min(920px, calc(100vw - 24px));
+      background: linear-gradient(165deg, rgba(28, 25, 23, 0.95), rgba(16, 14, 12, 0.98));
+      border: 1px solid rgba(194, 132, 58, 0.5);
+      border-radius: 20px;
+      padding: 16px 20px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+    }
+    .grid-epocas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .btn-epoca {
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #a8a29e;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-epoca.activa {
+      background: rgba(194, 132, 58, 0.22);
+      border-color: #c2843a;
+      color: #faf7f2;
+      box-shadow: 0 0 15px rgba(194, 132, 58, 0.25);
+    }
+    .btn-epoca strong { display: block; font-family: 'Cinzel', serif; font-size: 13px; color: #faf7f2; }
+    .btn-epoca span { font-size: 11px; opacity: 0.85; }
+    .barra-acciones {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    #hud-sim {
+      position: fixed;
+      top: 52px;
+      left: 20px;
+      z-index: 40;
+      max-width: 420px;
+      background: rgba(20, 18, 16, 0.9);
+      border: 1px solid rgba(194, 132, 58, 0.4);
+      border-radius: 16px;
+      padding: 14px 18px;
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body>
+  <div id="xr-v312-topbar">
+    <div class="xr-brand">
+      <span>🏛️ Laboratorio de Maquetas 3D · XR Blocks v3.12</span>
+      <span class="xr-badge">Física 9,8 m/s²</span>
+    </div>
+    <div class="xr-actions">
+      <a href="bienvenida.html" class="xr-top-btn">✋ Bienvenida y Pasaporte</a>
+      <a href="index.html#linea" class="xr-top-btn">📜 Línea del Tiempo</a>
+      <a href="index.html#roma" class="xr-top-btn xr-gold">🏛️ Ir a Misión Roma</a>
+    </div>
+  </div>
+
+  <div id="hud-sim">
+    <div id="epoca-sub" style="font-size:11px;font-weight:800;color:#e3a85c;text-transform:uppercase;letter-spacing:0.06em;">Edad Antigua · Hispania Romana</div>
+    <h1 id="epoca-titulo" style="margin:4px 0 6px;font-size:20px;">Acueducto Romano y Piedra Clave</h1>
+    <p id="epoca-desc" style="margin:0;font-size:12px;color:#d6d3d1;line-height:1.45;">
+      Las dovelas transmiten el empuje hacia los pilares. Pulsa «Soltar Pieza Clave» para simular el encaje gravitatorio con CaidaFisica3D.
+    </p>
+    <div id="estado-sim" style="margin-top:10px;font-size:12px;font-weight:700;color:#38bdf8;">
+      ✨ Arrastra con el ratón o el dedo para girar la maqueta 360°
+    </div>
+  </div>
+
+  <canvas id="lienzo-sim"></canvas>
+
+  <div class="panel-epocas">
+    <div class="grid-epocas">
+      <button class="btn-epoca" data-era="prehistoria">
+        <strong>I. Prehistoria</strong>
+        <span>Dolmen y Dintel Megalítico</span>
+      </button>
+      <button class="btn-epoca activa" data-era="roma">
+        <strong>II. Misión Roma</strong>
+        <span>Arco de Medio Punto y Clave</span>
+      </button>
+      <button class="btn-epoca" data-era="media">
+        <strong>III. Edad Media</strong>
+        <span>Arco Ojival Gótico</span>
+      </button>
+      <button class="btn-epoca" data-era="moderna">
+        <strong>IV. Edad Moderna</strong>
+        <span>Cúpula Octogonal y Linterna</span>
+      </button>
+      <button class="btn-epoca" data-era="contemporanea">
+        <strong>V. Contemporánea</strong>
+        <span>Celosía de Acero y Vidrio</span>
+      </button>
+    </div>
+    <div class="barra-acciones">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button id="btn-caida" class="principal" style="padding:10px 18px;border-radius:11px;cursor:pointer;">
+          ⚡ Soltar Pieza Clave (CaidaFisica3D · 9,8 m/s²)
+        </button>
+        <button id="btn-elevar" style="padding:10px 14px;border-radius:11px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:pointer;font-weight:700;">
+          ↑ Elevar Pieza
+        </button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <a id="link-capitulo" href="index.html#roma" class="btn-xrblocks-cta" style="text-decoration:none;font-size:12px;padding:10px 16px;">
+          Entrar al Capítulo Completo →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { CaidaFisica3D } from "./lib/xr-fisica.js";
+
+    const INFO = {
+      prehistoria: {
+        sub: "3500 a.C. · Megalitismo",
+        titulo: "Dolmen Megalítico y Losa de Cobertura",
+        desc: "Dos grandes ortostatos verticales sostienen el dintel ciclópeo superior por gravedad.",
+        link: "prehistoria.html"
+      },
+      roma: {
+        sub: "Siglo I d.C. · Ingeniería Romana",
+        titulo: "Acueducto Romano y Piedra Clave",
+        desc: "El arco de medio punto reparte la compresión hacia las pilastras al encajar la dovela central.",
+        link: "index.html#roma"
+      },
+      media: {
+        sub: "Siglo XIII · Arquitectura Gótica",
+        titulo: "Arco Apuntado Ojival y Clave",
+        desc: "El perfil apuntado reduce los empujes laterales y permite elevar bóvedas de mayor altura.",
+        link: "edad-media.html"
+      },
+      moderna: {
+        sub: "Siglo XV · Renacimiento",
+        titulo: "Cúpula Octogonal y Linterna Superior",
+        desc: "Tambor octogonal con nervios portantes coronado por la linterna que estabiliza el conjunto.",
+        link: "edad-moderna.html"
+      },
+      contemporanea: {
+        sub: "Siglos XIX-XXI · Hierro, Luz y Viento",
+        titulo: "Estructura Reticular de Acero y Vidrio",
+        desc: "Pórticos metálicos triangulados de alta resistencia con módulo acristalado superior.",
+        link: "edad-contemporanea.html"
+      }
+    };
+
+    const canvas = document.getElementById("lienzo-sim");
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x141210);
+
+    const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0.85, 3.1);
+    camera.lookAt(0, 0.15, 0);
+
+    scene.add(new THREE.AmbientLight(0xfff3e0, 1.1));
+    const dirLight = new THREE.DirectionalLight(0xffe4b5, 1.9);
+    dirLight.position.set(3, 5, 4);
+    scene.add(dirLight);
+
+    // Pedestal Maqueta
+    const maqueta = new THREE.Group();
+    scene.add(maqueta);
+
+    const base = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.35, 1.45, 0.12, 48),
+      new THREE.MeshStandardMaterial({ color: 0x26211d, roughness: 0.75 })
+    );
+    base.position.y = -0.56;
+    maqueta.add(base);
+
+    const grid = new THREE.GridHelper(2.2, 14, 0xc2843a, 0x3d352e);
+    grid.position.y = -0.49;
+    maqueta.add(grid);
+
+    const grupoMonumento = new THREE.Group();
+    maqueta.add(grupoMonumento);
+
+    let piezaClave = null;
+    let yDestinoActual = 0.65;
+    let fisica = null;
+
+    const matPiedra = new THREE.MeshStandardMaterial({ color: 0xd6c4aa, roughness: 0.65 });
+    const matClave = new THREE.MeshStandardMaterial({ color: 0xc2843a, roughness: 0.4, metalness: 0.2 });
+    const matAcero = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3, metalness: 0.7 });
+
+    function construirMonumento(era) {
+      while (grupoMonumento.children.length) grupoMonumento.remove(grupoMonumento.children[0]);
+      fisica = null;
+
+      if (era === "prehistoria") {
+        const izq = new THREE.Mesh(new THREE.BoxGeometry(0.32, 1.0, 0.45), matPiedra);
+        izq.position.set(-0.55, 0.0, 0);
+        const der = new THREE.Mesh(new THREE.BoxGeometry(0.32, 1.0, 0.45), matPiedra);
+        der.position.set(0.55, 0.0, 0);
+        grupoMonumento.add(izq, der);
+        piezaClave = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.28, 0.65), matClave);
+        yDestinoActual = 0.64;
+        piezaClave.position.set(0, 1.45, 0);
+        grupoMonumento.add(piezaClave);
+      } else if (era === "roma") {
+        const pIzq = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.75, 0.3), matPiedra);
+        pIzq.position.set(-0.55, -0.12, 0);
+        const pDer = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.75, 0.3), matPiedra);
+        pDer.position.set(0.55, -0.12, 0);
+        grupoMonumento.add(pIzq, pDer);
+        for (let i = 0; i < 5; i++) {
+          if (i === 2) continue;
+          const ang = Math.PI - (i + 0.5) * (Math.PI / 5);
+          const dov = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.16, 0.28), matPiedra);
+          dov.position.set(Math.cos(ang) * 0.55, 0.25 + Math.sin(ang) * 0.55, 0);
+          dov.rotation.z = ang - Math.PI / 2;
+          grupoMonumento.add(dov);
+        }
+        piezaClave = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.22, 0.32), matClave);
+        yDestinoActual = 0.8;
+        piezaClave.position.set(0, 1.5, 0);
+        grupoMonumento.add(piezaClave);
+      } else if (era === "media") {
+        const pIzq = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.85, 0.28), matPiedra);
+        pIzq.position.set(-0.52, -0.08, 0);
+        const pDer = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.85, 0.28), matPiedra);
+        pDer.position.set(0.52, -0.08, 0);
+        grupoMonumento.add(pIzq, pDer);
+        [-1, 1].forEach((lado) => {
+          const arco = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.55, 0.26), matPiedra);
+          arco.position.set(lado * 0.32, 0.55, 0);
+          arco.rotation.z = lado * 0.45;
+          grupoMonumento.add(arco);
+        });
+        piezaClave = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.38, 4), matClave);
+        piezaClave.rotation.y = Math.PI / 4;
+        yDestinoActual = 0.88;
+        piezaClave.position.set(0, 1.55, 0);
+        grupoMonumento.add(piezaClave);
+      } else if (era === "moderna") {
+        const tambor = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.72, 0.45, 8), matPiedra);
+        tambor.position.y = -0.25;
+        const cupula = new THREE.Mesh(new THREE.SphereGeometry(0.66, 8, 12, 0, Math.PI * 2, 0, Math.PI / 2.2), matPiedra);
+        cupula.position.y = -0.02;
+        grupoMonumento.add(tambor, cupula);
+        piezaClave = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 0.36, 8), matClave);
+        yDestinoActual = 0.72;
+        piezaClave.position.set(0, 1.48, 0);
+        grupoMonumento.add(piezaClave);
+      } else {
+        [-0.55, 0.55].forEach((x) => {
+          const col = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.05, 0.14), matAcero);
+          col.position.set(x, 0.02, 0);
+          grupoMonumento.add(col);
+        });
+        piezaClave = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.24, 0.45), matClave);
+        yDestinoActual = 0.66;
+        piezaClave.position.set(0, 1.48, 0);
+        grupoMonumento.add(piezaClave);
+      }
+
+      const info = INFO[era];
+      document.getElementById("epoca-sub").textContent = info.sub;
+      document.getElementById("epoca-titulo").textContent = info.titulo;
+      document.getElementById("epoca-desc").textContent = info.desc;
+      document.getElementById("link-capitulo").href = info.link;
+      lanzarCaida();
+    }
+
+    function lanzarCaida() {
+      if (!piezaClave) return;
+      if (piezaClave.position.y <= yDestinoActual + 0.05) {
+        piezaClave.position.y = yDestinoActual + 0.8;
+      }
+      document.getElementById("estado-sim").textContent = "⚡ Cayendo con gravedad 9,8 m/s²...";
+      document.getElementById("estado-sim").style.color = "#facc15";
+      fisica = new CaidaFisica3D(piezaClave, yDestinoActual, () => {
+        document.getElementById("estado-sim").textContent = "✓ ¡Pieza clave encajada con éxito en la maqueta!";
+        document.getElementById("estado-sim").style.color = "#4ade80";
+      });
+    }
+
+    document.getElementById("btn-caida").addEventListener("click", lanzarCaida);
+    document.getElementById("btn-elevar").addEventListener("click", () => {
+      if (!piezaClave) return;
+      fisica = null;
+      piezaClave.position.y = yDestinoActual + 0.85;
+      document.getElementById("estado-sim").textContent = "Pieza elevada · Lista para soltar";
+      document.getElementById("estado-sim").style.color = "#38bdf8";
+    });
+
+    document.querySelectorAll(".btn-epoca").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll(".btn-epoca").forEach((el) => el.classList.remove("activa"));
+        b.classList.add("activa");
+        construirMonumento(b.dataset.era);
+      });
+    });
+
+    // Rotación interactiva con ratón / táctil
+    let arrastrando = false, xAnt = 0;
+    canvas.addEventListener("pointerdown", (e) => { arrastrando = true; xAnt = e.clientX; });
+    window.addEventListener("pointerup", () => { arrastrando = false; });
+    window.addEventListener("pointermove", (e) => {
+      if (!arrastrando) return;
+      maqueta.rotation.y += (e.clientX - xAnt) * 0.01;
+      xAnt = e.clientX;
+    });
+
+    construirMonumento("roma");
+
+    let t0 = performance.now();
+    function animar(ahora) {
+      requestAnimationFrame(animar);
+      const dt = Math.min((ahora - t0) / 1000, 0.1);
+      t0 = ahora;
+      if (fisica) fisica.step(dt);
+      if (!arrastrando) maqueta.rotation.y += dt * 0.25;
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(animar);
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
