@@ -147,6 +147,7 @@
       #alternativos{padding:5px 9px}
     }
   </style>
+  <link rel="stylesheet" href="./lib/estilos.css?v=3.12">
 </head>
 <body>
   <main id="escena">
@@ -2357,7 +2358,7 @@
     if (abrirRoma) mostrarInicio(); else $("btn-entrar-prehistoria").focus({ preventScroll: true });
   
     // Integración XR Blocks v3.12 (Pruebas-ARX)
-    import("./lib/xr-adapter.js").then(({ conectarXRBlocks }) => {
+    import("./lib/xr-adapter.js?v=3.12").then(({ conectarXRBlocks }) => {
       const xr = conectarXRBlocks({ renderer, scene, camera, DEC, estado, empezarTactil, aPantalla, getEtapa: () => etapa });
       window.addEventListener("popstate", () => xr.alCambiarEtapa());
     }).catch(() => {});
