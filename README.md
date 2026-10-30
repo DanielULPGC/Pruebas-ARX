@@ -1,4 +1,4 @@
-# Las manos que construyeron la historia · v3.11 (edición para GitHub Pages)
+# Las manos que construyeron la historia · v3.12 (edición para GitHub Pages)
 
 Proyecto «Las manos que construyeron la historia». Geometría, patrimonio histórico y realidad aumentada en Educación Primaria (5.º y 6.º).
 
@@ -60,6 +60,14 @@ Los botones «← Línea del tiempo» de los capítulos llevan a la línea del t
 - **Modelar.** Tras decorar la vasija, se mide su capacidad con jarras de 2 L, 1 L y 0,5 L: se vierte (o se saca, con el cartel «verter/sacar») hasta llenarla justo hasta el borde. La vasija se ve transparente para seguir el nivel del agua. Después se elige su capacidad aproximada.
 - **Orientar.** El corredor empieza cada vez en una posición distinta (marcada con una línea discontinua). Tras orientarlo al este, el alumnado indica cuántos grados lo ha girado, por el camino más corto, y qué tipo de ángulo forma (agudo, recto, obtuso o llano). Un sector azul muestra el giro.
 - **Canarias.** El menú de forma, técnica, orden y esquemas se muestra siempre, también con la cámara. «Borrar» deja la pintadera y el papel como al principio, y hay además «Limpiar solo el papel».
+
+## Novedades de la v3.12 (30-10-2026)
+
+**Motor común en módulos.** El código que se repetía en los cinco capítulos (utilidades, motor gráfico, decorados, materiales, ayudas de juego, sonido, encuadre y etiquetas) está ahora en `lib/motor.js`, y los estilos comunes en `lib/estilos.css`. Cada capítulo conserva **sin cambios** sus cinco etapas, su gestor, sus textos y sus paneles. Se eliminan unas 4 200 líneas duplicadas: un arreglo del motor se hace ahora en un solo sitio. La extracción se hizo de forma automática y verificable (`docs/registro-decisiones.md`): las 6 724 cadenas de texto de la v3.11.4 siguen presentes, el HTML fuera del código es idéntico y el recorrido de las 25 etapas en el navegador da los mismos textos, métricas y paneles que antes.
+
+**Modo opcional «Construir en realidad mixta (maqueta 3D)».** En gafas o móviles que admiten WebXR inmersivo aparece un botón más en la pantalla de inicio de cada capítulo. La etapa se muestra como una maqueta de 55 cm de ancho a unos 65 cm, delante del alumno; se manipula apuntando con la mano (pinza del sistema) o con el mando, y los puntos que se pueden mover se señalan con esferas. Funciona con las 25 etapas sin reescribirlas. En ordenadores y en la mayoría de tabletas el botón no aparece y todo funciona como antes. Este modo no usa la cámara de MediaPipe: el seguimiento lo hace el propio visor. Se ha probado con un visor emulado (Meta Quest 3, IWER); falta probarlo con gafas reales en el aula.
+
+**No se incorpora XR Blocks.** Se valoró la biblioteca XR Blocks de Google y se descartó por ahora: está orientada a Chrome con Android XR, su forma documentada de carga es un CDN, fija su propia versión de three.js, no consta que pueda trabajar sobre el motor existente y sus funciones de IA envían datos a servidores externos. El modo de realidad mixta usa solo WebXR, la interfaz estándar del navegador.
 
 ## Novedades de la v3.11.2 (29-10-2026)
 
@@ -283,7 +291,7 @@ No funciona con doble clic: los navegadores bloquean los módulos y la cámara e
 
 ### 4. Comprobar la integridad
 
-Ejecuta `sha256sum -c MANIFIESTO.txt`. Además, la página verifica `lib/three.module.js` y `lib/vision_bundle.mjs` con SRI.
+Ejecuta `sha256sum -c MANIFIESTO.txt`. Además, la página verifica `lib/three.module.js` y `lib/vision_bundle.mjs` con SRI. Desde la v3.12, el manifiesto incluye también `lib/motor.js`, `lib/estilos.css` y `lib/xr-adapter.js`.
 
 ## Si la cámara no funciona
 
@@ -307,6 +315,7 @@ El indicador **«Cámara: …»**, bajo el panel superior, muestra en todo momen
 - Por defecto solo se ven unas manos dibujadas, no la imagen del alumnado.
 - La cámara se apaga al salir, al ocultar la página y si falla el arranque.
 - El progreso guardado solo contiene qué etapas están hechas, sin datos personales.
+- En el modo de realidad mixta (v3.12), la página no recibe imágenes de la cámara: solo la posición del mando o de la mano que calcula el propio visor.
 
 Su uso con menores debe valorarse con el delegado o la delegada de protección de datos del centro.
 
@@ -318,6 +327,7 @@ Su uso con menores debe valorarse con el delegado o la delegada de protección d
 - Encuadre comprobado en móvil vertical, móvil horizontal y tableta.
 - Sin peticiones externas salvo el modelo, cuando falta y está permitido.
 - La cámara se apaga cuando el detector no arranca.
+- v3.12: motor en `lib/motor.js`. Comprobado que ninguna de las 6 724 cadenas de texto de la v3.11.4 se pierde y que el HTML fuera del código es idéntico; recorrido de las 25 etapas en Chromium sin interfaz con los mismos títulos, métricas, mensajes, controles, contextos y «Saber más» que la v3.11.4, sin errores y sin peticiones externas. Modo de realidad mixta probado con un visor emulado (Meta Quest 3, IWER): entrar, cambiar de etapa, arrastrar el pilar de «Nivelar el canal» con el mando y salir devolviendo la escena a la pantalla. Pendiente: gafas reales.
 - v3.10: ver «Novedades de la v3.10». Comprobados el recorrido completo de la Prehistoria con los controles alternativos, la carga del detector de manos en la bienvenida (con cámara simulada), las descargas (HTML y CSV, con el texto del alumnado escapado), «Empezar de cero», la accesibilidad (axe) y la regresión de los cinco capítulos. La pinza sobre botones y la mano real de la bienvenida quedan pendientes de probar con una mano de verdad.
 - v3.9.1: la bienvenida pasa a ser la pantalla de inicio. Comprobada la navegación: raíz, línea del tiempo, recarga, «atrás», vuelta desde los capítulos, Misión Roma directa y modo docente.
 - v3.9: bienvenida y pasaporte del aprendiz. Probados en escritorio y en móvil vertical: soplo con puntero y con teclado, miniatura guardada, lectura del progreso, sello estampado e ideas previas. Sin violaciones de accesibilidad (axe, WCAG 2.2 AA), HTML válido, sin desbordamiento horizontal y sin errores.
