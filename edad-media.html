@@ -751,7 +751,7 @@
         b.disabled = !disponible(i);
         b.classList.toggle("hecha", hechas[i]);
         if (i === actual) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
-        b.setAttribute("aria-label", "Etapa " + (i + 1) + ": " + ETAPAS[i].nombre + (hechas[i] ? ", completada" : "") + (b.disabled ? ", bloqueada" : ""));
+        b.setAttribute("aria-label", b.textContent.trim() + ". Etapa " + (i + 1) + ": " + ETAPAS[i].nombre + (hechas[i] ? ", completada" : "") + (b.disabled ? ", bloqueada" : ""));
       });
       $("btn-siguiente").disabled = !(actual < 4 && hechas[actual]);
       $("btn-siguiente").textContent = actual < 4 ? "Siguiente etapa →" : "Capítulo terminado";

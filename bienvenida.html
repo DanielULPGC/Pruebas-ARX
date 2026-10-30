@@ -801,7 +801,7 @@
     });
     $("btn-csv").addEventListener("click", () => {
       if (!exigirCodigo()) return;
-      const d = datosPasaporte(), q = (t) => '"' + String(t ?? "").replace(/"/g, '""') + '"';
+      const d = datosPasaporte(), q = (t) => { let s = String(t ?? ""); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
       const lineas = [["alumno", "edad", "capitulo", "etapa", "completada", "segundos", "intentos_fallidos", "pistas", "terminada", "idea_previa", "idea_acertada", "dificultad", "gusto", "comentario"].join(";")];
       d.capitulos.forEach((c) => c.etapas.forEach((e) => lineas.push([d.alumno, c.edad, c.titulo, e.nombre, e.completada ? "si" : "no", e.segundos ?? "", e.intentos_fallidos ?? "", e.pistas ?? "", e.terminada || "", c.idea_previa || "", c.idea_acertada === null ? "" : c.idea_acertada ? "si" : "no", c.valoracion.dificultad || "", c.valoracion.gusto || "", c.valoracion.comentario].map(q).join(";"))));
       descargar(nombreArchivo("csv"), "\ufeff" + lineas.join("\r\n"), "text/csv;charset=utf-8");
