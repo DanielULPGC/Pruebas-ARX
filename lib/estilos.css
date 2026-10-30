@@ -1,0 +1,266 @@
+/* lib/estilos.css · Nuevo Diseño Visual v3.12 · XR Blocks & Realidad Mixta */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --ocre: #c2843a !important;
+  --ocre-claro: #e3a85c !important;
+  --noche: #141210 !important;
+  --panel: rgba(24, 21, 18, 0.92) !important;
+  --texto: #faf7f2 !important;
+  --ok: #4ade80 !important;
+  --aviso: #facc15 !important;
+  --error: #f87171 !important;
+  --agua: #38bdf8 !important;
+  --serif: 'Cinzel', Georgia, serif !important;
+  --sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+}
+
+body {
+  font-family: var(--sans) !important;
+  background-color: #141210 !important;
+  color: #faf7f2 !important;
+}
+
+h1, h2, h3, #hud h1, .tarjeta h2, .era-nombre {
+  font-family: 'Cinzel', Georgia, serif !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Barra superior global v3.12 XR Blocks */
+#xr-v312-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 16px;
+  background: linear-gradient(90deg, rgba(20, 18, 16, 0.96) 0%, rgba(36, 30, 24, 0.96) 50%, rgba(20, 18, 16, 0.96) 100%);
+  border-bottom: 1px solid rgba(194, 132, 58, 0.45);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12px;
+  color: #faf7f2;
+}
+
+#xr-v312-topbar .xr-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+#xr-v312-topbar .xr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(194, 132, 58, 0.28));
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+#xr-v312-topbar .xr-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#xr-v312-topbar a.xr-top-btn,
+#xr-v312-topbar button.xr-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #faf7f2;
+}
+
+#xr-v312-topbar a.xr-top-btn:hover,
+#xr-v312-topbar button.xr-top-btn:hover {
+  background: rgba(194, 132, 58, 0.25);
+  border-color: #c2843a;
+  transform: translateY(-1px);
+}
+
+#xr-v312-topbar a.xr-top-btn.xr-highlight,
+#xr-v312-topbar button.xr-top-btn.xr-highlight {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: #0c1318;
+  border-color: #7dd3fc;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+#xr-v312-topbar a.xr-top-btn.xr-gold,
+#xr-v312-topbar button.xr-top-btn.xr-gold {
+  background: linear-gradient(135deg, #c2843a, #e3a85c);
+  color: #141210;
+  border-color: #f3c68f;
+}
+
+/* Ajuste de HUD para convivir con la barra superior v3.12 */
+#hud {
+  top: max(46px, calc(env(safe-area-inset-top) + 42px)) !important;
+  background: linear-gradient(160deg, rgba(28, 25, 23, 0.94), rgba(18, 16, 14, 0.96)) !important;
+  border: 1px solid rgba(194, 132, 58, 0.45) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 12px 15px !important;
+}
+
+#hud .lema {
+  color: #e3a85c !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-size: 0.68rem !important;
+}
+
+#hud h1 {
+  font-size: 1.15rem !important;
+  color: #faf7f2 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+#etapas button {
+  border-radius: 9px !important;
+  font-weight: 700 !important;
+  transition: all 0.18s ease !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+#etapas button[aria-current="step"] {
+  background: linear-gradient(135deg, #c2843a, #e3a85c) !important;
+  color: #141210 !important;
+  border-color: #f6d5a7 !important;
+  box-shadow: 0 0 12px rgba(194, 132, 58, 0.45) !important;
+}
+
+/* Tarjetas y diálogos rediseñados v3.12 */
+.tarjeta, #panel-cueva {
+  background: linear-gradient(165deg, rgba(34, 30, 27, 0.96), rgba(20, 18, 16, 0.98)) !important;
+  border: 1px solid rgba(194, 132, 58, 0.45) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.07) inset !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+#portada {
+  background: radial-gradient(circle at 50% 20%, rgba(194, 132, 58, 0.16), rgba(16, 14, 12, 0.97) 70%) !important;
+  padding-top: 52px !important;
+}
+
+.linea li.era {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(194, 132, 58, 0.28) !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  transition: transform 0.18s ease, border-color 0.18s ease !important;
+}
+
+.linea li.era:hover {
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  transform: translateX(3px);
+}
+
+button.principal, .boton.principal {
+  background: linear-gradient(135deg, #c2843a, #e3a85c) !important;
+  color: #141210 !important;
+  border: 1px solid #f2c994 !important;
+  box-shadow: 0 4px 14px rgba(194, 132, 58, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+button.principal:hover, .boton.principal:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Botón destacado XR Blocks */
+#btn-xrblocks, .btn-xrblocks-cta {
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
+  color: #081018 !important;
+  border: 1px solid #bae6fd !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 12px 18px !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+#btn-xrblocks:hover, .btn-xrblocks-cta:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5) !important;
+}
+
+/* Dock flotante de Maqueta 3D Interactiva v3.12 */
+#xr-maqueta-dock {
+  position: fixed;
+  right: 14px;
+  bottom: 72px;
+  z-index: 9990;
+  width: min(350px, calc(100vw - 28px));
+  background: linear-gradient(165deg, rgba(24, 21, 18, 0.95), rgba(14, 12, 10, 0.98));
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.2);
+  backdrop-filter: blur(16px);
+  color: #faf7f2;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12px;
+}
+
+#xr-maqueta-dock h4 {
+  margin: 0 0 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#xr-maqueta-dock .dock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+#xr-maqueta-dock button {
+  padding: 7px 11px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#xr-maqueta-dock input[type="range"] {
+  flex: 1;
+  accent-color: #38bdf8;
+}
