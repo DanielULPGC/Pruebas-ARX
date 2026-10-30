@@ -2336,6 +2336,12 @@
     pintarProgreso();
     encuadrar();
     $("btn-manos").focus({ preventScroll: true });
+  
+    // Integración XR Blocks v3.12 (Pruebas-ARX)
+    import("./lib/xr-adapter.js").then(({ conectarXRBlocks }) => {
+      const xr = conectarXRBlocks({ renderer, scene, camera, DEC, estado, empezarTactil, aPantalla, getEtapa: () => etapa });
+      window.addEventListener("popstate", () => xr.alCambiarEtapa());
+    }).catch(() => {});
   </script>
 </body>
 </html>
