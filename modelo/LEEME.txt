@@ -1,0 +1,21 @@
+El modelo de detección de manos YA ESTÁ INCLUIDO en esta carpeta (hand_landmarker.task,
+descarga oficial de Google comprobada el 19-10-2026). Estas instrucciones sirven para reponerlo.
+
+Coloca aquí el modelo de detección de manos con este nombre exacto:
+
+    hand_landmarker.task
+
+Descárgalo desde la fuente oficial de Google (MediaPipe):
+https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+
+Comprobación de integridad (versión float16, 1):
+    tamaño: 7 819 105 bytes
+    SHA-256: fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1
+En Linux o macOS:  shasum -a 256 hand_landmarker.task
+En Windows:        certutil -hashfile hand_landmarker.task SHA256
+El panel «Comprobar cámara y manos» (añade ?diagnostico a la dirección) también la comprueba.
+
+Sin este archivo, la actividad funciona igual en modo táctil (dedo, ratón y teclado),
+pero no con las manos ante la cámara. Esta edición no descarga nada de Google
+(PERMITIR_MODELO_REMOTO = false en index.html).
+Licencia: revisa la tarjeta del modelo en la documentación de MediaPipe antes de redistribuirlo.
