@@ -795,7 +795,24 @@
         '<p class="nota">Las manos que construyeron la historia · Geometría, patrimonio histórico y realidad aumentada</p><h1>Pasaporte del aprendiz</h1>' +
         '<p><strong>Nombre o código:</strong> ' + esc(d.alumno) + ' · <strong>Descargado:</strong> ' + esc(fecha) + ' · <strong>Sellos:</strong> ' + d.capitulos.filter((c) => c.completo).length + ' de 5</p>' + filas +
         '<p class="nota">Datos registrados en el navegador del dispositivo. El tiempo solo cuenta mientras la etapa está a la vista y sin terminar; es aproximado. «Intentos fallidos» son respuestas o acciones erróneas detectadas por la actividad. Un guion (—) indica que no hay datos: por ejemplo, etapas hechas antes de que existiera este registro.</p>' +
-        '<script type="application/json" id="datos">' + JSON.stringify(d).replace(/</g, "\\u003c") + '<\/script></body></html>';
+        '<script type="application/json" id="datos">' + JSON.stringify(d).replace(/</g, "\\u003c") + '<\/script>
+  <!-- Nuevo Diseño Visual v3.12 · XR Blocks (Pruebas-ARX) -->
+  <link rel="stylesheet" href="./lib/estilos.css?v=3.12">
+  <script>
+    (function() {
+      if (document.getElementById("xr-v312-topbar")) return;
+      var bar = document.createElement("div");
+      bar.id = "xr-v312-topbar";
+      bar.innerHTML = '<div class="xr-brand"><span>🏛️ Las Manos que Construyeron la Historia</span><span class="xr-badge">✨ Nuevo Diseño v3.12 · XR Blocks</span></div>' +
+        '<div class="xr-actions">' +
+        '<a href="simulador-xr.html" class="xr-top-btn xr-highlight">🥽 Simulador Maqueta 3D (5 Épocas)</a>' +
+        '<a href="index.html#linea" class="xr-top-btn xr-gold">📜 Línea del Tiempo v3.12</a>' +
+        '<a href="index.html#roma" class="xr-top-btn">🏛️ Misión Roma Directo</a>' +
+        '</div>';
+      document.body.prepend(bar);
+    })();
+  </script>
+</body></html>';
       descargar(nombreArchivo("html"), html, "text/html;charset=utf-8");
       avisoTapa("Pasaporte descargado. Entrégaselo a tu docente como te indique (por ejemplo, en el aula virtual).");
     });
