@@ -2,13 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Simulador Maqueta 3D · XR Blocks v3.12 · Las Manos que Construyeron la Historia</title>
+  <title>Laboratorio de maquetas 3D · Las manos que construyeron la historia</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./lib/estilos.css?v=3.12">
   <script type="importmap">
   {
     "imports": {
       "three": "./lib/three.module.js"
+    },
+    "integrity": {
+      "./lib/three.module.js": "sha384-61S/Nu32S3E5+n+KpCOTb2eRYps6fVKm+9Gz1QBvSePFthb46f063Aa/qe/lykFZ"
     }
   }
   </script>
@@ -53,7 +56,15 @@
       color: #faf7f2;
       box-shadow: 0 0 15px rgba(194, 132, 58, 0.25);
     }
-    .btn-epoca strong { display: block; font-family: 'Cinzel', serif; font-size: 13px; color: #faf7f2; }
+    .btn-epoca { font: inherit; }
+    .btn-epoca strong { display: block; font-size: 13px; color: #faf7f2; }
+    #xr-v312-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 16px; background: rgba(20, 18, 16, 0.92); border-bottom: 1px solid rgba(194, 132, 58, 0.35); font-size: 13px; }
+    .xr-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .xr-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
+    .xr-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .xr-top-btn { color: #faf7f2; text-decoration: none; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); font-weight: 600; }
+    .xr-top-btn.xr-gold, .btn-capitulo { background: #c2843a; color: #1c1917; border-color: #c2843a; border-radius: 10px; font-weight: 700; }
+    .xr-top-btn:focus-visible, .btn-capitulo:focus-visible, .btn-epoca:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
     .btn-epoca span { font-size: 11px; opacity: 0.85; }
     .barra-acciones {
       display: flex;
@@ -76,26 +87,27 @@
       padding: 14px 18px;
       backdrop-filter: blur(12px);
     }
+    @media (max-width: 700px) { #hud-sim { top: 118px; left: 10px; right: 10px; max-width: none; padding: 10px 14px; } #epoca-desc { display: none; } .panel-epocas { padding: 10px 12px; bottom: 10px; } .btn-epoca span { display: none; } }
   </style>
 </head>
 <body>
   <div id="xr-v312-topbar">
     <div class="xr-brand">
-      <span>🏛️ Laboratorio de Maquetas 3D · XR Blocks v3.12</span>
+      <span>🏛️ Laboratorio de maquetas 3D</span>
       <span class="xr-badge">Física 9,8 m/s²</span>
     </div>
     <div class="xr-actions">
-      <a href="bienvenida.html" class="xr-top-btn">✋ Bienvenida y Pasaporte</a>
-      <a href="index.html#linea" class="xr-top-btn">📜 Línea del Tiempo</a>
+      <a href="bienvenida.html" class="xr-top-btn">✋ Bienvenida y pasaporte</a>
+      <a href="index.html#linea" class="xr-top-btn">📜 Línea del tiempo</a>
       <a href="index.html#roma" class="xr-top-btn xr-gold">🏛️ Ir a Misión Roma</a>
     </div>
   </div>
 
   <div id="hud-sim">
-    <div id="epoca-sub" style="font-size:11px;font-weight:800;color:#e3a85c;text-transform:uppercase;letter-spacing:0.06em;">Edad Antigua · Hispania Romana</div>
-    <h1 id="epoca-titulo" style="margin:4px 0 6px;font-size:20px;">Acueducto Romano y Piedra Clave</h1>
+    <div id="epoca-sub" style="font-size:11px;font-weight:800;color:#e3a85c;text-transform:uppercase;letter-spacing:0.06em;">Edad Antigua · Hispania romana</div>
+    <h1 id="epoca-titulo" style="margin:4px 0 6px;font-size:20px;">Arco romano y clave</h1>
     <p id="epoca-desc" style="margin:0;font-size:12px;color:#d6d3d1;line-height:1.45;">
-      Las dovelas transmiten el empuje hacia los pilares. Pulsa «Soltar Pieza Clave» para simular el encaje gravitatorio con CaidaFisica3D.
+      Las dovelas transmiten el empuje hacia los pilares. Pulsa «Soltar la pieza» para ver cómo encaja la clave por efecto de la gravedad.
     </p>
     <div id="estado-sim" style="margin-top:10px;font-size:12px;font-weight:700;color:#38bdf8;">
       ✨ Arrastra con el ratón o el dedo para girar la maqueta 360°
@@ -108,37 +120,37 @@
     <div class="grid-epocas">
       <button class="btn-epoca" data-era="prehistoria">
         <strong>I. Prehistoria</strong>
-        <span>Dolmen y Dintel Megalítico</span>
+        <span>Dolmen y losa de cubierta</span>
       </button>
       <button class="btn-epoca activa" data-era="roma">
         <strong>II. Misión Roma</strong>
-        <span>Arco de Medio Punto y Clave</span>
+        <span>Arco de medio punto y clave</span>
       </button>
       <button class="btn-epoca" data-era="media">
         <strong>III. Edad Media</strong>
-        <span>Arco Ojival Gótico</span>
+        <span>Arco apuntado gótico</span>
       </button>
       <button class="btn-epoca" data-era="moderna">
         <strong>IV. Edad Moderna</strong>
-        <span>Cúpula Octogonal y Linterna</span>
+        <span>Cúpula octogonal y linterna</span>
       </button>
       <button class="btn-epoca" data-era="contemporanea">
         <strong>V. Contemporánea</strong>
-        <span>Celosía de Acero y Vidrio</span>
+        <span>Pórtico de acero arriostrado</span>
       </button>
     </div>
     <div class="barra-acciones">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button id="btn-caida" class="principal" style="padding:10px 18px;border-radius:11px;cursor:pointer;">
-          ⚡ Soltar Pieza Clave (CaidaFisica3D · 9,8 m/s²)
+          ⚡ Soltar la pieza (gravedad: 9,8 m/s²)
         </button>
         <button id="btn-elevar" style="padding:10px 14px;border-radius:11px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:pointer;font-weight:700;">
-          ↑ Elevar Pieza
+          ↑ Elevar la pieza
         </button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <a id="link-capitulo" href="index.html#roma" class="btn-xrblocks-cta" style="text-decoration:none;font-size:12px;padding:10px 16px;">
-          Entrar al Capítulo Completo →
+        <a id="link-capitulo" href="index.html#roma" class="btn-capitulo" style="text-decoration:none;font-size:12px;padding:10px 16px;">
+          Entrar en el capítulo completo →
         </a>
       </div>
     </div>
@@ -150,33 +162,33 @@
 
     const INFO = {
       prehistoria: {
-        sub: "3500 a.C. · Megalitismo",
-        titulo: "Dolmen Megalítico y Losa de Cobertura",
-        desc: "Dos grandes ortostatos verticales sostienen el dintel ciclópeo superior por gravedad.",
+        sub: "Neolítico · Megalitismo",
+        titulo: "Dolmen y losa de cubierta",
+        desc: "Dos grandes ortostatos verticales sostienen la losa de cubierta solo por su peso: no hay argamasa.",
         link: "prehistoria.html"
       },
       roma: {
-        sub: "Siglo I d.C. · Ingeniería Romana",
-        titulo: "Acueducto Romano y Piedra Clave",
-        desc: "El arco de medio punto reparte la compresión hacia las pilastras al encajar la dovela central.",
+        sub: "Siglos I-II d. C. · Ingeniería romana",
+        titulo: "Arco romano y clave",
+        desc: "El arco de medio punto reparte la compresión hacia los pilares cuando se encaja la dovela central, la clave.",
         link: "index.html#roma"
       },
       media: {
-        sub: "Siglo XIII · Arquitectura Gótica",
-        titulo: "Arco Apuntado Ojival y Clave",
+        sub: "Siglo XIII · Arquitectura gótica",
+        titulo: "Arco apuntado y clave",
         desc: "El perfil apuntado reduce los empujes laterales y permite elevar bóvedas de mayor altura.",
         link: "edad-media.html"
       },
       moderna: {
         sub: "Siglo XV · Renacimiento",
-        titulo: "Cúpula Octogonal y Linterna Superior",
-        desc: "Tambor octogonal con nervios portantes coronado por la linterna que estabiliza el conjunto.",
+        titulo: "Cúpula octogonal y linterna",
+        desc: "Tambor octogonal con una cúpula coronada por la linterna, como en la catedral de Florencia (Brunelleschi).",
         link: "edad-moderna.html"
       },
       contemporanea: {
-        sub: "Siglos XIX-XXI · Hierro, Luz y Viento",
-        titulo: "Estructura Reticular de Acero y Vidrio",
-        desc: "Pórticos metálicos triangulados de alta resistencia con módulo acristalado superior.",
+        sub: "Siglos XIX-XXI · Hierro, luz y viento",
+        titulo: "Pórtico de acero arriostrado",
+        desc: "Dos pilares de acero, una viga y diagonales: los triángulos impiden que el pórtico se deforme, como en el puente de Vizcaya.",
         link: "edad-contemporanea.html"
       }
     };
@@ -289,6 +301,13 @@
           col.position.set(x, 0.02, 0);
           grupoMonumento.add(col);
         });
+        // Diagonales (cruz de San Andrés): forman los triángulos que dan rigidez al pórtico
+        [1, -1].forEach((s) => {
+          const diag = new THREE.Mesh(new THREE.BoxGeometry(0.05, Math.hypot(1.1, 0.95), 0.05), matAcero);
+          diag.position.set(0, 0.07, 0);
+          diag.rotation.z = s * Math.atan2(1.1, 0.95);
+          grupoMonumento.add(diag);
+        });
         piezaClave = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.24, 0.45), matClave);
         yDestinoActual = 0.66;
         piezaClave.position.set(0, 1.48, 0);
@@ -308,10 +327,10 @@
       if (piezaClave.position.y <= yDestinoActual + 0.05) {
         piezaClave.position.y = yDestinoActual + 0.8;
       }
-      document.getElementById("estado-sim").textContent = "⚡ Cayendo con gravedad 9,8 m/s²...";
+      document.getElementById("estado-sim").textContent = "⚡ Cayendo con la gravedad (9,8 m/s²)…";
       document.getElementById("estado-sim").style.color = "#facc15";
       fisica = new CaidaFisica3D(piezaClave, yDestinoActual, () => {
-        document.getElementById("estado-sim").textContent = "✓ ¡Pieza clave encajada con éxito en la maqueta!";
+        document.getElementById("estado-sim").textContent = "✓ ¡Pieza encajada!";
         document.getElementById("estado-sim").style.color = "#4ade80";
       });
     }
@@ -321,7 +340,7 @@
       if (!piezaClave) return;
       fisica = null;
       piezaClave.position.y = yDestinoActual + 0.85;
-      document.getElementById("estado-sim").textContent = "Pieza elevada · Lista para soltar";
+      document.getElementById("estado-sim").textContent = "Pieza elevada: lista para soltar.";
       document.getElementById("estado-sim").style.color = "#38bdf8";
     });
 

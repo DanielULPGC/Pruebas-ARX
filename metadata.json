@@ -1,6 +1,0 @@
-{
-  "name": "Las Manos Que Construyeron La Historia · XR Blocks v3.12",
-  "description": "Centro de descarga, simulador 3D interactivo y suite WebXR para Las Manos Que Construyeron La Historia con soporte XR Blocks, físicas y maquetas táctiles.",
-  "requestFramePermissions": ["camera"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
